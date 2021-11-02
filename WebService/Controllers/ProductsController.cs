@@ -46,7 +46,7 @@ namespace WebService.Controllers
             
             var items = products.Select(CreateProductListViewModel);
             
-            var result = CreateResultModel(queryString.Page, queryString.PageSize, _dataService.NumberOfProducts(), items);
+            var result = CreateResultModel(queryString, _dataService.NumberOfProducts(), items);
             
             return Ok(result);
         }
@@ -72,33 +72,33 @@ namespace WebService.Controllers
          *
          */
 
-        private object CreateResultModel(int page, int pageSize, int total, IEnumerable<ProductListViewModel> model)
+        private object CreateResultModel(QueryString queryString, int total, IEnumerable<ProductListViewModel> model)
         {
             return new
             {
                 total,
-                prev = CreateNextPageLink(page, pageSize),
-                cur = CreateCurrentPageLink(page, pageSize),
-                next = CreateNextPageLink(page, pageSize, total),
+                prev = CreateNextPageLink(queryString),
+                cur = CreateCurrentPageLink(queryString),
+                next = CreateNextPageLink(queryString, total),
                 items = model
             };
         }
 
-        private string CreateNextPageLink(int page, int pageSize, int total)
+        private string CreateNextPageLink(QueryString queryString, int total)
         {
-            var lastPage = GetLastPage(pageSize, total);
-            return page >= lastPage ? null : GetProductsUrl(page + 1, pageSize);
+            var lastPage = GetLastPage(queryString.PageSize, total);
+            return queryString.Page >= lastPage ? null : GetProductsUrl(queryString.Page + 1, queryString.PageSize);
         }
 
         
-        private string CreateCurrentPageLink(int page, int pageSize)
+        private string CreateCurrentPageLink(QueryString queryString)
         {
-            return GetProductsUrl(page, pageSize);
+            return GetProductsUrl(queryString.Page, queryString.PageSize);
         }
 
-        private string CreateNextPageLink(int page, int pageSize)
+        private string CreateNextPageLink(QueryString queryString)
         {
-            return page <= 0 ? null : GetProductsUrl(page - 1, pageSize);
+            return queryString.Page <= 0 ? null : GetProductsUrl(queryString.Page - 1, queryString.PageSize);
         }
 
         private string GetProductsUrl(int page, int pageSize)
