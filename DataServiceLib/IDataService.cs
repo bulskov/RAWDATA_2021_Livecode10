@@ -6,7 +6,7 @@ namespace DataServiceLib
     {
         IList<Category> GetCategories();
         Category GetCategory(int id);
-        IList<Product> GetProducts(int page, int pageSize);
+        IList<Product> GetProducts(QueryString queryString);
         Product GetProduct(int id);
 
         int NumberOfProducts();

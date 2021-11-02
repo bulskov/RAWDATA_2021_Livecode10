@@ -9,21 +9,7 @@ using WebService.ViewModels;
 
 namespace WebService.Controllers
 {
-    public class QueryString
-    {
-        private int _pageSize = 10;
-
-        public const int MaxPageSize = 25;
-        
-        public int Page { get; set; } = 0;
-
-        public int PageSize
-        {
-            get => _pageSize;
-            set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
-        }
-    }
-
+    
     [ApiController]
     [Route("api/products")]
     public class ProductsController : Controller
@@ -42,7 +28,7 @@ namespace WebService.Controllers
         [HttpGet(Name = nameof(GetProducts))]
         public IActionResult GetProducts([FromQuery] QueryString queryString)
         {
-            var products = _dataService.GetProducts(queryString.Page, queryString.PageSize);
+            var products = _dataService.GetProducts(queryString);
             
             var items = products.Select(CreateProductListViewModel);
             
