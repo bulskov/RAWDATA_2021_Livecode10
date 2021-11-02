@@ -23,9 +23,9 @@ namespace WebService.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetProducts(int page = 0, int pageSize = 10)
         {
-            var products = _dataService.GetProducts();
+            var products = _dataService.GetProducts(page, pageSize);
             var model = products.Select(CreateProductListViewModel);
             return Ok(model);
         }
