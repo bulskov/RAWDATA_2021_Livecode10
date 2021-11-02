@@ -74,10 +74,23 @@ namespace DataServiceLib
 
         public IList<Product> GetProducts(QueryString queryString)
         {
-            return _products
+            var result = _products.AsEnumerable();
+
+            switch (queryString.OrderBy)
+            {
+                case "product":
+                    result = result.OrderBy(x => x.Name).AsEnumerable();
+                    break;
+                case "category":
+                    result = result.OrderBy(x => x.Category.Name).AsEnumerable();
+                    break;
+            }
+
+            result = result
                 .Skip(queryString.Page * queryString.PageSize)
-                .Take(queryString.PageSize)
-                .ToList();
+                .Take(queryString.PageSize);
+
+            return result.ToList();
         }
 
         public Product GetProduct(int id)

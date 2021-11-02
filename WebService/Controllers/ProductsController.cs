@@ -73,26 +73,26 @@ namespace WebService.Controllers
         private string CreateNextPageLink(QueryString queryString, int total)
         {
             var lastPage = GetLastPage(queryString.PageSize, total);
-            return queryString.Page >= lastPage ? null : GetProductsUrl(queryString.Page + 1, queryString.PageSize);
+            return queryString.Page >= lastPage ? null : GetProductsUrl(queryString.Page + 1, queryString.PageSize, queryString.OrderBy);
         }
 
         
         private string CreateCurrentPageLink(QueryString queryString)
         {
-            return GetProductsUrl(queryString.Page, queryString.PageSize);
+            return GetProductsUrl(queryString.Page, queryString.PageSize, queryString.OrderBy);
         }
 
         private string CreateNextPageLink(QueryString queryString)
         {
-            return queryString.Page <= 0 ? null : GetProductsUrl(queryString.Page - 1, queryString.PageSize);
+            return queryString.Page <= 0 ? null : GetProductsUrl(queryString.Page - 1, queryString.PageSize, queryString.OrderBy);
         }
 
-        private string GetProductsUrl(int page, int pageSize)
+        private string GetProductsUrl(int page, int pageSize, string orderBy)
         {
             return _linkGenerator.GetUriByName(
                 HttpContext,
                 nameof(GetProducts),
-                new { page, pageSize });
+                new { page, pageSize, orderBy });
         }
 
         private static int GetLastPage(int pageSize, int total)
