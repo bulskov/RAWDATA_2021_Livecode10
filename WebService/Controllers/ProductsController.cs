@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using DataServiceLib;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,9 @@ namespace WebService.Controllers
         {
             var products = _dataService.GetProducts(page, pageSize);
             var model = products.Select(CreateProductListViewModel);
+            var total = _dataService.NumberOfProducts();
+
+            var lastPage = (int) Math.Ceiling(total / (double)pageSize) - 1;
 
             var prev = page <= 0
                 ? null
@@ -37,14 +41,16 @@ namespace WebService.Controllers
 
             var cur = _linkGenerator.GetUriByName(HttpContext, nameof(GetProducts), new { page, pageSize });
 
-            var next = _linkGenerator.GetUriByName(
+            var next = page >= lastPage
+                ? null
+                : _linkGenerator.GetUriByName(
                 HttpContext, 
                 nameof(GetProducts), 
                 new { page = page + 1, pageSize });
 
             var result = new
             {
-                total = _dataService.NumberOfProducts(),
+                total,
                 prev,
                 cur,
                 next,
