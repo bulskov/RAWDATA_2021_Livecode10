@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DataServiceLib;
@@ -27,36 +28,11 @@ namespace WebService.Controllers
         public IActionResult GetProducts(int page = 0, int pageSize = 10)
         {
             var products = _dataService.GetProducts(page, pageSize);
-            var model = products.Select(CreateProductListViewModel);
-            var total = _dataService.NumberOfProducts();
-
-            var lastPage = (int) Math.Ceiling(total / (double)pageSize) - 1;
-
-            var prev = page <= 0
-                ? null
-                : _linkGenerator.GetUriByName(
-                  HttpContext, 
-                  nameof(GetProducts), 
-                  new { page = page - 1, pageSize });
-
-            var cur = _linkGenerator.GetUriByName(HttpContext, nameof(GetProducts), new { page, pageSize });
-
-            var next = page >= lastPage
-                ? null
-                : _linkGenerator.GetUriByName(
-                HttpContext, 
-                nameof(GetProducts), 
-                new { page = page + 1, pageSize });
-
-            var result = new
-            {
-                total,
-                prev,
-                cur,
-                next,
-                items = model
-            };
-
+            
+            var items = products.Select(CreateProductListViewModel);
+            
+            var result = CreateResultModel(page, pageSize, _dataService.NumberOfProducts(), items);
+            
             return Ok(result);
         }
 
@@ -75,21 +51,69 @@ namespace WebService.Controllers
             return Ok(model);
         }
 
+        /*
+         *
+         * Helper methods
+         *
+         */
+
+        private object CreateResultModel(int page, int pageSize, int total, IEnumerable<ProductListViewModel> model)
+        {
+            return new
+            {
+                total,
+                prev = CreateNextPageLink(page, pageSize),
+                cur = CreateCurrentPageLink(page, pageSize),
+                next = CreateNextPageLink(page, pageSize, total),
+                items = model
+            };
+        }
+
+        private string CreateNextPageLink(int page, int pageSize, int total)
+        {
+            var lastPage = GetLastPage(pageSize, total);
+            return page >= lastPage ? null : GetProductsUrl(page + 1, pageSize);
+        }
+
+        
+        private string CreateCurrentPageLink(int page, int pageSize)
+        {
+            return GetProductsUrl(page, pageSize);
+        }
+
+        private string CreateNextPageLink(int page, int pageSize)
+        {
+            return page <= 0 ? null : GetProductsUrl(page - 1, pageSize);
+        }
+
+        private string GetProductsUrl(int page, int pageSize)
+        {
+            return _linkGenerator.GetUriByName(
+                HttpContext,
+                nameof(GetProducts),
+                new { page, pageSize });
+        }
+
+        private static int GetLastPage(int pageSize, int total)
+        {
+            return (int)Math.Ceiling(total / (double)pageSize) - 1;
+        }
+
         private ProductViewModel CreateProductViewModel(Product product)
         {
             var model = _mapper.Map<ProductViewModel>(product);
-            model.Url = GetUrl(product);
+            model.Url = GetProductUrl(product);
             return model;
         }
 
         private ProductListViewModel CreateProductListViewModel(Product product)
         {
             var model = _mapper.Map<ProductListViewModel>(product);
-            model.Url = GetUrl(product);
+            model.Url = GetProductUrl(product);
             return model;
         }
 
-        private string GetUrl(Product product)
+        private string GetProductUrl(Product product)
         {
             return _linkGenerator.GetUriByName(HttpContext, nameof(GetProduct), new { product.Id });
         }
