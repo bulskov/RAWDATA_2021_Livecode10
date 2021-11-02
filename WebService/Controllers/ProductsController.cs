@@ -22,18 +22,30 @@ namespace WebService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(GetProducts))]
         public IActionResult GetProducts(int page = 0, int pageSize = 10)
         {
             var products = _dataService.GetProducts(page, pageSize);
             var model = products.Select(CreateProductListViewModel);
 
+            var prev = _linkGenerator.GetUriByName(
+                HttpContext, 
+                nameof(GetProducts), 
+                new { page = page - 1, pageSize });
+
+            var cur = _linkGenerator.GetUriByName(HttpContext, nameof(GetProducts), new { page, pageSize });
+
+            var next = _linkGenerator.GetUriByName(
+                HttpContext, 
+                nameof(GetProducts), 
+                new { page = page + 1, pageSize });
+
             var result = new
             {
-                total = 0,
-                prev = "",
-                cur = "",
-                next = "",
+                total = _dataService.NumberOfProducts(),
+                prev,
+                cur,
+                next,
                 items = model
             };
 
