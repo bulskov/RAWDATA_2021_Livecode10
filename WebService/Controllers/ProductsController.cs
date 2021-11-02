@@ -28,10 +28,12 @@ namespace WebService.Controllers
             var products = _dataService.GetProducts(page, pageSize);
             var model = products.Select(CreateProductListViewModel);
 
-            var prev = _linkGenerator.GetUriByName(
-                HttpContext, 
-                nameof(GetProducts), 
-                new { page = page - 1, pageSize });
+            var prev = page <= 0
+                ? null
+                : _linkGenerator.GetUriByName(
+                  HttpContext, 
+                  nameof(GetProducts), 
+                  new { page = page - 1, pageSize });
 
             var cur = _linkGenerator.GetUriByName(HttpContext, nameof(GetProducts), new { page, pageSize });
 
