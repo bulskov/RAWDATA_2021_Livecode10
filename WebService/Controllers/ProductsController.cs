@@ -27,7 +27,17 @@ namespace WebService.Controllers
         {
             var products = _dataService.GetProducts(page, pageSize);
             var model = products.Select(CreateProductListViewModel);
-            return Ok(model);
+
+            var result = new
+            {
+                total = 0,
+                prev = "",
+                cur = "",
+                next = "",
+                items = model
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("{id}", Name = nameof(GetProduct))]
