@@ -10,3 +10,17 @@ btn.addEventListener('click', function () {
     output.innerHTML = val;
     output2.innerHTML = val;
 });
+
+function getCategories(callback) {
+    fetch("api/categories", { method: 'GET' })
+        .then(response => response.json())
+        .then(json => {
+            //console.log(json);
+            callback(json);
+        });
+}
+
+
+getCategories(function (categories) {
+    console.log(categories);
+});
