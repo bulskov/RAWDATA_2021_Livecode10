@@ -13,7 +13,7 @@ require.config({
 
 
 require(["knockout", "viewmodel"], function (ko, vm) {
-    console.log(vm.firstName);
+    //console.log(vm.firstName);
 
     ko.applyBindings(vm);
 

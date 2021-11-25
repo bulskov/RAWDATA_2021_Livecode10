@@ -2,51 +2,48 @@
 <html>
 <head>
     <title>index</title>
+    <link href="css/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body>
-    <h1>Livecode 8</h1>
+<body class="container-fluid">
 
-    <input data-bind="textInput: firstName" />
-    <input data-bind="textInput: lastName" />
-    
-    <div data-bind="text: fullName"></div>
-    <button data-bind="click: addName">Add</button>
+    <div data-bind="template: currentView"></div>
 
-    <div data-bind="foreach: names">
+    <script type="text/html" id="list">
+        <h1>Categories</h1>
 
-        <div data-bind="text: lastName"></div>
-        <div data-bind="text: firstName"></div>
-
-    </div>
+        <button class="btn btn-primary" data-bind="click: addCategoryView">Add Category</button>
 
 
+        <table class="table">
+            <thead>
+                <tr><th>Url</th><th>Name</th><th>Description</th><th></th></tr>
+            </thead>
+            <tbody data-bind="foreach: categories">
+                <tr>
+                    <td data-bind="text: url"></td>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: description"></td>
+                    <td><button class="btn btn-danger btn-sm" data-bind="click: $parent.deleteCategory">Del</button></td>
+                </tr>
+            </tbody>
+        </table>
+        </script>
 
+        <script type="text/html" id="add">
+            <h1>Create Category</h1>
 
-    
-    <!--<table>
-        <thead>
-            <tr><th>Url</th><th>Name</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>-->
-
-
-    <!--<div>
-        Name: <input />
-        Description: <input />
-        <button>Add</button>
-    </div>-->
+            <div class="col-6">
+                Name: <input class="form-control" data-bind="value: selectName" required/>
+                Description: <input class="form-control" data-bind="value: selectDescription" />
+                <button data-bind="click: addCategory" class="btn btn-primary">Add</button>
+                <button data-bind="click: cancelAddCategory" class="btn btn-primary">Cancel</button>
+            </div>
+        </script>
 
 
 
 
 
-    <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>
+        <script data-main="js/main.js" src="js/lib/requirejs/require.js"></script>
 </body>
 </html>
