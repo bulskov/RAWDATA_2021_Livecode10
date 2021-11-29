@@ -13,6 +13,10 @@ require.config({
     }
 });
 
+// component registration
+require(['knockout'], (ko) => {
+
+});
 
 require(["knockout", "viewmodel"], function (ko, vm) {
     //console.log(vm.firstName);
