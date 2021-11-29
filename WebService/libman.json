@@ -11,6 +11,12 @@
     },
     {
       "provider": "unpkg",
+      "library": "requirejs-text@2.0.16",
+      "destination": "wwwroot/js/lib/requirejs/",
+      "files": [ "text.js" ]
+    },
+    {
+      "provider": "unpkg",
       "library": "jquery@3.6.0",
       "destination": "wwwroot/js/lib/jquery/",
       "files": [ "dist/jquery.js", "dist/jquery.min.js", "dist/jquery.slim.js" ]
