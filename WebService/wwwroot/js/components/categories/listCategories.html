@@ -1,6 +1,6 @@
 ﻿<h1>Categories</h1>
 
-<button class="btn btn-primary" data-bind="click: addCategoryView">Add Category</button>
+<button class="btn btn-primary" data-bind="click: create">Add Category</button>
 
 
 <table class="table">
@@ -12,7 +12,7 @@
             <td data-bind="text: url"></td>
             <td data-bind="text: name"></td>
             <td data-bind="text: description"></td>
-            <td><button class="btn btn-danger btn-sm" data-bind="click: $parent.deleteCategory">Del</button></td>
+            <td><button class="btn btn-danger btn-sm" data-bind="click: $parent.del">Del</button></td>
         </tr>
     </tbody>
 </table>

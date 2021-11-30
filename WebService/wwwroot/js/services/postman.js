@@ -1,12 +1,15 @@
 ﻿define([], () => {
     let subscribers = [];
+    let lastEvent = undefined;
 
-    let subscribe = (event, callback) => {
-        let subscriber = { event, callback };
+    let subscribe = (event, callback, target) => {
+        let subscriber = { event, callback, target };
 
-        if (!subscribers.find(x => x.event === event))
+        if (!subscribers.find(x => x.target === target && x.event === event))
             subscribers.push(subscriber);
-        console.log(subscriber);
+
+        if (lastEvent && lastEvent.event === event)
+            callback(lastEvent.data);
     };
 
     let publish = (event, data) => {
@@ -14,6 +17,8 @@
         subscribers.forEach(x => {
             if (x.event === event) x.callback(data);
         });
+
+        lastEvent = { event, data };
     };
 
     return {

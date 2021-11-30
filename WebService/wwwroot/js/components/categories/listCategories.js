@@ -1,31 +1,26 @@
 ﻿define(['knockout', 'dataService', 'postman'], function (ko, ds, postman) {
     return function (params) {
         let categories = ko.observableArray([]);
-        let currentView = params.currentView
 
-        let deleteCategory = category => {
-            console.log(category);
+        let del = category => {
             categories.remove(category);
             ds.deleteCategory(category);
         }
 
-        let addCategoryView = () => currentView("add-category");
+        let create = () => postman.publish("changeView", "add-category");
 
-        ds.getCategories(data => {
-            console.log(data);
-            categories(data);
-        });
+        ds.getCategories(categories);
 
         postman.subscribe("newCategory", category => {
             ds.createCategory(category, newCategory => {
                 categories.push(newCategory);
             });
-        });
+        }, "list-categories");
 
         return {
             categories,
-            deleteCategory,
-            addCategoryView
+            del,
+            create
         };
     };
 });
