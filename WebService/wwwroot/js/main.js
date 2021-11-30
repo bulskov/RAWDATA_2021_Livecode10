@@ -15,7 +15,14 @@ require.config({
 
 // component registration
 require(['knockout'], (ko) => {
-
+    ko.components.register("add-category", {
+        viewModel: { require: "components/categories/addCategory" },
+        template: { require: "text!components/categories/addCategory.html" }
+    });
+    ko.components.register("list-categories", {
+        viewModel: { require: "components/categories/listCategories" },
+        template: { require: "text!components/categories/listCategories.html" }
+    });
 });
 
 require(["knockout", "viewmodel"], function (ko, vm) {

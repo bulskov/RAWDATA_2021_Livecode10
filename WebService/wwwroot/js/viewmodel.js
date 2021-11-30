@@ -1,5 +1,5 @@
 ﻿define(["knockout", "dataService"], function (ko, ds) {
-    let currentView = ko.observable("list");
+    let currentView = ko.observable("list-categories");
 
     let categories = ko.observableArray([]);
 
